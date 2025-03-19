@@ -1,56 +1,39 @@
 #!/bin/bash
 
-# Function to add copyright header
-add_copyright() {
-  local file="$1"
-  local date_str="$(date +"%Y-%m-%d")"
+# Define variables
+current_year=$(date +%Y)
+current_date=$(date +%Y-%m-%d)  # YYYY-MM-DD format
+copyright_text="© [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved. $current_date"
 
-  # Skip .gitignore files
-  if [[ "$file" == ".gitignore" ]]; then
-    return
-  fi
+# Define file types to scan
+file_extensions="js|jsx|ts|tsx|html|css|yml"
 
-  # Determine the comment syntax based on file extension
-  case "$file" in
-    *.js|*.jsx|*.ts|*.tsx)
-      comment="// © [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved. $date_str\n\n"
-      ;;
-    *.py|*.yml|*.yaml)
-      comment="# © [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved. $date_str\n\n"
-      ;;
-    *.html)
-      comment="<!-- © [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved. $date_str -->\n\n"
-      ;;
-    *.css)
-      comment="/* © [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved. $date_str */\n\n"
-      ;;
-    *)
-      return
-      ;;
-  esac
+# Get staged files that match the extensions (ignoring .gitignore)
+files=$(git diff --cached --name-only --diff-filter=ACM | grep -E "\.($file_extensions)$" | grep -v ".gitignore")
 
-  # Check if the file already contains the copyright notice
-  if ! grep -q "© \[2005\] \[KingIT Solutions (Pvt) Ltd\]" "$file"; then
-    tmp_file=$(mktemp)
-    echo -e "$comment$(cat "$file")" > "$tmp_file"
-    mv "$tmp_file" "$file"
-    git add "$file"
-    echo "Updated: $file"
-  fi
-}
-
-# Initial scan for existing files
-files=$(git ls-files | grep -E '\.(js|jsx|ts|tsx|py|java|cpp|h|cs|html|css|yml|yaml)$')
 for file in $files; do
-  add_copyright "$file"
-done
+  if ! grep -q "© \[2005\] \[KingIT Solutions" "$file"; then
+    case "$file" in
+      *.js|*.jsx|*.ts|*.tsx)
+        comment="// $copyright_text"
+        ;;
+      *.html)
+        comment="<!-- $copyright_text -->"
+        ;;
+      *.css)
+        comment="/* $copyright_text */"
+        ;;
+      *.yml)
+        comment="# $copyright_text"
+        ;;
+      *)
+        echo "Skipping unknown file type: $file"
+        continue
+        ;;
+    esac
 
-echo "Initial scan completed. Now watching for file changes..."
-
-# Continuous monitoring for new changes
-while true; do
-  changed_file=$(inotifywait -e close_write,moved_to,create --format "%w%f" -q .)
-  if [[ $changed_file =~ \.(js|jsx|ts|tsx|py|java|cpp|h|cs|html|css|yml|yaml)$ ]]; then
-    add_copyright "$changed_file"
+    # Prepend copyright header
+    echo -e "$comment\n\n$(cat "$file")" > "$file"
+    git add "$file"
   fi
 done
