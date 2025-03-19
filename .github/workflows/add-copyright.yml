@@ -1,11 +1,9 @@
 name: Add Copyright Header
 
 on:
-  push:
-    branches:
-      - main
-      - dev
-  pull_request:
+    push:
+      branches:
+        - "**"
 
 jobs:
   add-copyright:
