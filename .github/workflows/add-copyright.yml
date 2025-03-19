@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_PAT }}  # Use the PAT
 
       - name: Run copyright header script
         run: |
@@ -26,7 +28,7 @@ jobs:
             git config --global user.name "github-actions"
             git config --global user.email "github-actions@github.com"
             git commit -am "chore: add copyright header"
-            git push
+            git push origin HEAD:$(git rev-parse --abbrev-ref HEAD)
           else
             echo "No changes needed"
           fi
