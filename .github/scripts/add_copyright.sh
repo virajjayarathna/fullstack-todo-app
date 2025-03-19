@@ -11,15 +11,26 @@ for file in $files; do
 
   # Determine the comment syntax based on file extension
   case "$file" in
-    *.js|*.jsx|*.ts|*.tsx|*.java|*.cpp|*.h|*.cs)
+    # JavaScript, TypeScript, React files
+    *.js|*.jsx|*.ts|*.tsx)
       comment="// Copyright (c) $(date +%Y) IT Solutions. All rights reserved.\n\n"
       ;;
+    
+    # Python, YAML files
     *.py|*.yml|*.yaml)
       comment="# Copyright (c) $(date +%Y) IT Solutions. All rights reserved.\n\n"
       ;;
-    *.html|*.css)
+    
+    # HTML files
+    *.html)
       comment="<!-- Copyright (c) $(date +%Y) IT Solutions. All rights reserved. -->\n\n"
       ;;
+    
+    # CSS files
+    *.css)
+      comment="/* Copyright (c) $(date +%Y) IT Solutions. All rights reserved. */\n\n"
+      ;;
+    
     *)
       continue
       ;;
