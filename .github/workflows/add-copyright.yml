@@ -1,0 +1,32 @@
+name: Add Copyright Header
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+
+jobs:
+  add-copyright:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run copyright header script
+        run: |
+          chmod +x .github/scripts/add_copyright.sh
+          .github/scripts/add_copyright.sh
+
+      - name: Commit changes if needed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --global user.name "github-actions"
+            git config --global user.email "github-actions@github.com"
+            git commit -am "chore: add copyright header"
+            git push
+          else
+            echo "No changes needed"
+          fi
