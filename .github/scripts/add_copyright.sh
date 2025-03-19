@@ -6,7 +6,7 @@ current_date=$(date +%Y-%m-%d)  # YYYY-MM-DD format
 copyright_text="© [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved. $current_date"
 
 # Define the file extensions to check
-files=$(git ls-files | grep -E '\.(js|jsx|ts|tsx|py|java|cpp|h|cs|html|css|yml|yaml)$')
+files=$(git ls-files | grep -E '\.(js|jsx|ts|tsx|py|java|cpp|h|cs|html|css|yml|yaml|sh)$')
 
 for file in $files; do
   # Skip .gitignore files
@@ -21,8 +21,8 @@ for file in $files; do
       comment="// $copyright_text\n\n"
       ;;
     
-    # Python, YAML files
-    *.py|*.yml|*.yaml)
+    # Python, YAML, Shell scripts
+    *.py|*.yml|*.yaml|*.sh)
       comment="# $copyright_text\n\n"
       ;;
     
@@ -41,7 +41,7 @@ for file in $files; do
       ;;
   esac
 
-  # Check if the file already contains a copyright header
+  # Check if the file already contains the copyright header
   if ! grep -q "© \[2005\] \[KingIT Solutions" "$file"; then
     echo -e "$comment$(cat "$file")" > "$file"
     git add "$file"
