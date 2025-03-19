@@ -13,22 +13,22 @@ for file in $files; do
   case "$file" in
     # JavaScript, TypeScript, React files
     *.js|*.jsx|*.ts|*.tsx)
-      comment="// Copyright (c) $(date +%Y) IT Solutions. All rights reserved.\n\n"
+      comment="// © [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved.$(date +%Y)\n\n"
       ;;
     
     # Python, YAML files
     *.py|*.yml|*.yaml)
-      comment="# Copyright (c) $(date +%Y) IT Solutions. All rights reserved.\n\n"
+      comment="# © [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved.$(date +%Y)\n\n"
       ;;
     
     # HTML files
     *.html)
-      comment="<!-- Copyright (c) $(date +%Y) IT Solutions. All rights reserved. -->\n\n"
+      comment="<!-- © [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved.$(date +%Y) -->\n\n"
       ;;
     
     # CSS files
     *.css)
-      comment="/* Copyright (c) $(date +%Y) IT Solutions. All rights reserved. */\n\n"
+      comment="/* © [2005] [KingIT Solutions (Pvt) Ltd]. All Rights Reserved.$(date +%Y) */\n\n"
       ;;
     
     *)
